@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python-is-python3 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install \
+RUN pip3 install --no-cache-dir \
       wheel \
-      pyOpenSSL \
+      "pyOpenSSL>=26" \
       pyyaml \
-      cryptography>=44.0.1
+      "cryptography>=44.0.1"
 
 RUN for full_version in 1.30.4 1.31.0;  \
      do \
@@ -29,7 +29,7 @@ RUN ln -s /opt/kubectl/1.31 /opt/kubectl/default
 
 RUN mkdir -p /bin/helm-downloaded \
     && wget -q -O /bin/helm-downloaded/helm.tar.gz \
-        https://get.helm.sh/helm-v3.19.0-linux-amd64.tar.gz \
+        https://get.helm.sh/helm-v3.20.1-linux-amd64.tar.gz \
     && tar -zxvf /bin/helm-downloaded/helm.tar.gz -C /bin/helm-downloaded \
     && mv /bin/helm-downloaded/linux-amd64/helm /bin/ \
     && rm -rf /bin/helm-downloaded
