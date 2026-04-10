@@ -25,7 +25,7 @@ RUN for full_version in 1.30.4 1.31.0;  \
             https://storage.googleapis.com/kubernetes-release/release/v$full_version/bin/linux/amd64/kubectl \
         && chmod 755 /opt/kubectl/$version/kubectl; \
      done;
-RUN for full_version in 1.33.8 1.35.2;  \
+RUN for full_version in 1.32.4 1.33.8 1.34.3 1.35.2;  \
      do \
         version=${full_version%.*} \
         && mkdir -p /opt/kubectl/$version \
@@ -33,7 +33,7 @@ RUN for full_version in 1.33.8 1.35.2;  \
             https://dl.k8s.io/release/v$full_version/bin/linux/amd64/kubectl \
         && chmod 755 /opt/kubectl/$version/kubectl; \
      done;
-RUN ln -s /opt/kubectl/1.35 /opt/kubectl/default
+RUN ln -s /opt/kubectl/1.33 /opt/kubectl/default
 
 RUN mkdir -p /bin/helm-downloaded \
     && wget -q -O /bin/helm-downloaded/helm.tar.gz \
