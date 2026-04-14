@@ -18,8 +18,22 @@ marketplace/build: .build/marketplace/dev \
 	mkdir -p "$@"
 
 
+.build/marketplace/kubectl_fixed: \
+		.build/var/MARKETPLACE_TOOLS_TAG \
+		marketplace/kubectl_fixed/Dockerfile \
+		| .build/marketplace
+	$(call print_target)
+	docker build \
+	    --tag "gcr.io/cloud-marketplace-tools/k8s/kubectl_fixed:$(MARKETPLACE_TOOLS_TAG)" \
+	    --tag "gcr.io/cloud-marketplace-tools/k8s/kubectl_fixed:latest" \
+	    -f marketplace/kubectl_fixed/Dockerfile \
+	    .
+	@touch "$@"
+
+
 .build/marketplace/dev: \
 		.build/var/MARKETPLACE_TOOLS_TAG \
+		.build/marketplace/kubectl_fixed \
 		$(shell find marketplace/deployer_util -type f) \
 		$(shell find marketplace/dev -type f) \
 		$(shell find scripts -type f) \
@@ -65,6 +79,7 @@ marketplace/build: .build/marketplace/dev \
 
 .build/marketplace/deployer/helm: \
 		.build/var/MARKETPLACE_TOOLS_TAG \
+		.build/marketplace/kubectl_fixed \
 		$(shell find marketplace/deployer_util -type f) \
 		$(shell find marketplace/deployer_helm_base -type f) \
 		| .build/marketplace/deployer

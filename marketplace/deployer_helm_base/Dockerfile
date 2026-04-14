@@ -17,27 +17,11 @@ RUN pip3 install --no-cache-dir \
       pyyaml \
       "cryptography>=44.0.1"
 
-RUN for full_version in 1.30.4 1.31.0;  \
-     do \
-        version=${full_version%.*} \
-        && mkdir -p /opt/kubectl/$version \
-        && wget -q -O /opt/kubectl/$version/kubectl \
-            https://storage.googleapis.com/kubernetes-release/release/v$full_version/bin/linux/amd64/kubectl \
-        && chmod 755 /opt/kubectl/$version/kubectl; \
-     done;
-RUN for full_version in 1.32.4 1.33.8 1.34.3 1.35.2;  \
-     do \
-        version=${full_version%.*} \
-        && mkdir -p /opt/kubectl/$version \
-        && wget -q -O /opt/kubectl/$version/kubectl \
-            https://dl.k8s.io/release/v$full_version/bin/linux/amd64/kubectl \
-        && chmod 755 /opt/kubectl/$version/kubectl; \
-     done;
-RUN ln -s /opt/kubectl/1.33 /opt/kubectl/default
+COPY --from=gcr.io/cloud-marketplace-tools/k8s/kubectl_fixed:latest /opt/kubectl /opt/kubectl
 
 RUN mkdir -p /bin/helm-downloaded \
     && wget -q -O /bin/helm-downloaded/helm.tar.gz \
-        https://get.helm.sh/helm-v3.20.1-linux-amd64.tar.gz \
+        https://get.helm.sh/helm-v3.20.2-linux-amd64.tar.gz \
     && tar -zxvf /bin/helm-downloaded/helm.tar.gz -C /bin/helm-downloaded \
     && mv /bin/helm-downloaded/linux-amd64/helm /bin/ \
     && rm -rf /bin/helm-downloaded
